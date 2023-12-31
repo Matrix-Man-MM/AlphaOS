@@ -10,7 +10,8 @@ LDFLAGS = -m elf_i386 -T link.ld
 BOOTFILE = bin/boot.o
 KERNELFILE = bin/kernel.o
 VGAFILE = bin/vga.o
-OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE)
+GDTFILE = bin/gdt.o
+OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE) $(GDTFILE)
 OSFILE = bin/AlphaOS
 
 VM = qemu-system-x86_64
@@ -23,6 +24,7 @@ build:
 	$(AS) $(ASFLAGS) src/boot.asm -o $(BOOTFILE)
 	$(CC) $(CCFLAGS) -c src/kernel.c -o $(KERNELFILE)
 	$(CC) $(CCFLAGS) -c src/vga.c -o $(VGAFILE)
+	$(CC) $(CCFLAGS) -c src/gdt.c -o $(GDTFILE)
 	$(LD) $(LDFLAGS) -o $(OSFILE) $(OBJ)
 
 run:

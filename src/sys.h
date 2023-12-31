@@ -16,4 +16,8 @@ extern void puts(char* str);
 extern void set_text_color(unsigned char fg, unsigned char bg);
 extern void init_vga();
 
+/* GDT */
+extern void init_gdt();
+extern void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
+
 #endif /* SYS_H */

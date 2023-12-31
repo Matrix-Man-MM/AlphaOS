@@ -54,7 +54,10 @@ void outb(unsigned short port, unsigned char data)
 
 int kernel_main() {
 	init_vga();
-	puts("AlphaOS\r\n");
+	puts("Welcome to AlphaOS!\r\n");
+
+	init_gdt();
+	puts("GDT Initialized!\r\n");
 
 	for (;;);
 	return 0;

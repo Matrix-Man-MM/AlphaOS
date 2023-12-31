@@ -31,6 +31,20 @@ _stublet:
 	call kernel_main
 	jmp $
 
+global flush_gdt
+extern gdtptr
+flush_gdt:
+	lgdt [gdtptr]
+	mov ax, 0x10
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
+	mov ss, ax
+	jmp 0x08:flush_two
+flush_two:
+	ret
+
 section .bss
 	resb 8192
 sys_stack:

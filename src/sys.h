@@ -20,4 +20,8 @@ extern void init_vga();
 extern void init_gdt();
 extern void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
 
+/* IDT */
+extern void init_idt();
+extern void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags);
+
 #endif /* SYS_H */

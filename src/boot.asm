@@ -45,6 +45,12 @@ flush_gdt:
 flush_two:
 	ret
 
+global load_idt
+extern idtptr
+load_idt:
+	lidt [idtptr]
+	ret
+
 section .bss
 	resb 8192
 sys_stack:

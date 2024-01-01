@@ -59,6 +59,9 @@ int kernel_main() {
 	init_gdt();
 	puts("GDT Initialized!\r\n");
 
+	init_idt();
+	puts("IDT Initialized!\r\n");
+
 	for (;;);
 	return 0;
 }

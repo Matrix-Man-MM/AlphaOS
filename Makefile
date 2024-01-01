@@ -11,7 +11,8 @@ BOOTFILE = bin/boot.o
 KERNELFILE = bin/kernel.o
 VGAFILE = bin/vga.o
 GDTFILE = bin/gdt.o
-OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE) $(GDTFILE)
+IDTFILE = bin/idt.o
+OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE) $(GDTFILE) $(IDTFILE)
 OSFILE = bin/AlphaOS
 
 VM = qemu-system-x86_64
@@ -25,6 +26,7 @@ build:
 	$(CC) $(CCFLAGS) -c src/kernel.c -o $(KERNELFILE)
 	$(CC) $(CCFLAGS) -c src/vga.c -o $(VGAFILE)
 	$(CC) $(CCFLAGS) -c src/gdt.c -o $(GDTFILE)
+	$(CC) $(CCFLAGS) -c src/idt.c -o $(IDTFILE)
 	$(LD) $(LDFLAGS) -o $(OSFILE) $(OBJ)
 
 run:

@@ -62,6 +62,9 @@ int kernel_main() {
 	init_idt();
 	puts("IDT Initialized!\r\n");
 
+	init_isrs();
+	puts("ISRs Initialized!\r\n");
+
 	for (;;);
 	return 0;
 }

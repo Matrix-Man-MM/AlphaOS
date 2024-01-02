@@ -24,4 +24,17 @@ extern void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsig
 extern void init_idt();
 extern void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags);
 
+/* Registers */
+struct regs_t
+{
+	unsigned int gs, fs, es, ds;
+	unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
+	unsigned int int_no, err_code;
+	unsigned int eip, cs, eflags, useresp, ss;
+};
+
+/* ISRs */
+extern void init_isrs();
+extern void handle_fault(struct regs_t* r);
+
 #endif /* SYS_H */

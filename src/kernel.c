@@ -65,6 +65,9 @@ int kernel_main() {
 	init_isrs();
 	puts("ISRs Initialized!\r\n");
 
+	init_irq();
+	puts("IRQ Initialized!\r\n");
+
 	for (;;);
 	return 0;
 }

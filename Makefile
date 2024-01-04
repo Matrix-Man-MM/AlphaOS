@@ -13,7 +13,8 @@ VGAFILE = bin/vga.o
 GDTFILE = bin/gdt.o
 IDTFILE = bin/idt.o
 ISRSFILE = bin/isrs.o
-OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE) $(GDTFILE) $(IDTFILE) $(ISRSFILE)
+IRQFILE = bin/irq.o
+OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE) $(GDTFILE) $(IDTFILE) $(ISRSFILE) $(IRQFILE)
 OSFILE = bin/AlphaOS
 
 VM = qemu-system-x86_64
@@ -29,6 +30,7 @@ build:
 	$(CC) $(CCFLAGS) -c src/gdt.c -o $(GDTFILE)
 	$(CC) $(CCFLAGS) -c src/idt.c -o $(IDTFILE)
 	$(CC) $(CCFLAGS) -c src/isrs.c -o $(ISRSFILE)
+	$(CC) $(CCFLAGS) -c src/irq.c -o $(IRQFILE)
 	$(LD) $(LDFLAGS) -o $(OSFILE) $(OBJ)
 
 run:

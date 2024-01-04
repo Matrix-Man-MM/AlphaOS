@@ -12,3 +12,4 @@ I want to have a large project that I can work on when I'm bored.
 [x] GDT
 [x] IDT
 [x] ISRs
+[x] IRQ

@@ -37,4 +37,9 @@ struct regs_t
 extern void init_isrs();
 extern void handle_fault(struct regs_t* r);
 
+/* IRQ */
+extern void init_irq();
+extern void install_irq_handler(int irq, void* handler);
+extern void uninstall_irq_handler(int irq);
+
 #endif /* SYS_H */

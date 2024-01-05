@@ -47,4 +47,8 @@ extern void init_timer();
 extern void wait();
 extern int ticks;
 
+/* KEYBOARD */
+extern void init_keyboard();
+extern void keyboard_wait();
+
 #endif /* SYS_H */

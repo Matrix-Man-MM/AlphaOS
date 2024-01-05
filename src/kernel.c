@@ -68,6 +68,10 @@ int kernel_main() {
 	init_irq();
 	puts("IRQ Initialized!\r\n");
 
+	asm volatile("sti");
+	init_timer();
+	puts("TIMER Initialized!\r\n");
+
 	for (;;);
 	return 0;
 }

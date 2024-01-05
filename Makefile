@@ -14,7 +14,8 @@ GDTFILE = bin/gdt.o
 IDTFILE = bin/idt.o
 ISRSFILE = bin/isrs.o
 IRQFILE = bin/irq.o
-OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE) $(GDTFILE) $(IDTFILE) $(ISRSFILE) $(IRQFILE)
+TIMERFILE = bin/timer.o
+OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE) $(GDTFILE) $(IDTFILE) $(ISRSFILE) $(IRQFILE) $(TIMERFILE)
 OSFILE = bin/AlphaOS
 
 VM = qemu-system-x86_64
@@ -31,6 +32,7 @@ build:
 	$(CC) $(CCFLAGS) -c src/idt.c -o $(IDTFILE)
 	$(CC) $(CCFLAGS) -c src/isrs.c -o $(ISRSFILE)
 	$(CC) $(CCFLAGS) -c src/irq.c -o $(IRQFILE)
+	$(CC) $(CCFLAGS) -c src/timer.c -o $(TIMERFILE)
 	$(LD) $(LDFLAGS) -o $(OSFILE) $(OBJ)
 
 run:

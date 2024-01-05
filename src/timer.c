@@ -19,17 +19,6 @@ void handle_timer(struct regs_t* r)
 	if (ticks % 18 == 0)
 	{
 		ticker++;
-		puts("Tick...");
-		if (ticker % 4 == 0)
-			putc('|');
-		else if (ticker % 4 == 1)
-			putc('/');
-		else if (ticker % 4 == 2)
-			putc('-');
-		else if (ticker % 4 == 3)
-			putc('\\');
-
-		putc('\n');
 	}
 }
 

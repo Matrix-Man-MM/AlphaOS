@@ -72,6 +72,9 @@ int kernel_main() {
 	init_timer();
 	puts("TIMER Initialized!\r\n");
 
+	init_keyboard();
+	puts("KEYBOARD Initialized!\r\n");
+
 	for (;;);
 	return 0;
 }

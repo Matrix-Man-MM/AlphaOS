@@ -42,4 +42,9 @@ extern void init_irq();
 extern void install_irq_handler(int irq, void* handler);
 extern void uninstall_irq_handler(int irq);
 
+/* TIMER */
+extern void init_timer();
+extern void wait();
+extern int ticks;
+
 #endif /* SYS_H */

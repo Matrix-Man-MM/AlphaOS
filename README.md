@@ -14,3 +14,5 @@ I want to have a large project that I can work on when I'm bored.
 [x] ISRs
 [x] IRQ
 [x] TIMER
+[x] KEYBOARD
+[x] PRINTF

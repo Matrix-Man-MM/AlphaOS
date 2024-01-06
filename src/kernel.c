@@ -75,6 +75,10 @@ int kernel_main() {
 	init_keyboard();
 	puts("KEYBOARD Initialized!\r\n");
 
+	char* str = "string";
+	int i = 500;
+	printf("PRINTF %s %d\r\n", str, i);
+
 	for (;;);
 	return 0;
 }

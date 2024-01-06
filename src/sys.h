@@ -51,4 +51,7 @@ extern int ticks;
 extern void init_keyboard();
 extern void keyboard_wait();
 
+/* PRINTF */
+extern void printf(const char* format, ...);
+
 #endif /* SYS_H */

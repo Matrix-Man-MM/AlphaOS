@@ -16,7 +16,8 @@ ISRSFILE = bin/isrs.o
 IRQFILE = bin/irq.o
 TIMERFILE = bin/timer.o
 KEYBOARDFILE = bin/keyboard.o
-OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE) $(GDTFILE) $(IDTFILE) $(ISRSFILE) $(IRQFILE) $(TIMERFILE) $(KEYBOARDFILE)
+PRINTFFILE = bin/printf.o
+OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE) $(GDTFILE) $(IDTFILE) $(ISRSFILE) $(IRQFILE) $(TIMERFILE) $(KEYBOARDFILE) $(PRINTFFILE)
 OSFILE = bin/AlphaOS
 
 VM = qemu-system-x86_64
@@ -35,6 +36,7 @@ build:
 	$(CC) $(CCFLAGS) -c src/irq.c -o $(IRQFILE)
 	$(CC) $(CCFLAGS) -c src/timer.c -o $(TIMERFILE)
 	$(CC) $(CCFLAGS) -c src/keyboard.c -o $(KEYBOARDFILE)
+	$(CC) $(CCFLAGS) -c src/printf.c -o $(PRINTFFILE)
 	$(LD) $(LDFLAGS) -o $(OSFILE) $(OBJ)
 
 run:

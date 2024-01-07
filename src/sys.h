@@ -1,6 +1,16 @@
 #ifndef SYS_H
 #define SYS_H
 
+/* Types */
+#define NULL ((void*)0UL)
+typedef unsigned long uintptr_t;
+typedef long size_t;
+typedef unsigned int uint32_t;
+
+/* Kernel Strings */
+#define KERNEL_NAME "AlphaOS"
+#define KERNEL_VERSION "0.0.0"
+
 /* KERNEL */
 extern unsigned char* memcpy(unsigned char* dst, const unsigned char* src, int cnt);
 extern unsigned char* memset(unsigned char* dst, unsigned char val, int cnt);
@@ -14,6 +24,7 @@ extern void clear();
 extern void putc(unsigned char c);
 extern void puts(char* str);
 extern void set_text_color(unsigned char fg, unsigned char bg);
+extern void reset_text_color();
 extern void init_vga();
 
 /* GDT */

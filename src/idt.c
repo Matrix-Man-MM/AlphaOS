@@ -12,7 +12,7 @@ struct idt_entry
 struct idt_pointer
 {
 	unsigned short limit;
-	unsigned int base;
+	uintptr_t base;
 } __attribute__((packed));
 
 struct idt_entry idt[256];

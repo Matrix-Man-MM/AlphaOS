@@ -96,6 +96,11 @@ void set_text_color(unsigned char fg, unsigned char bg)
 	attribute = (bg >> 4) | (fg & 0x0F);
 }
 
+void reset_text_color()
+{
+	set_text_color(15,0);
+}
+
 void init_vga()
 {
 	textmemptr = (unsigned short*)0xB8000;

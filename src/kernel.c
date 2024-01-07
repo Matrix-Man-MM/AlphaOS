@@ -103,9 +103,17 @@ int kernel_main(struct multiboot_t* mb_ptr) {
 	printf("Testing VGA Text Colors...\r\n");
 	for (int i = 0; i < 16; i++)
 	{
-		set_text_color(i,0);
+		set_text_color(i,i);
 		putc('A');
 	}
+	puts("\r\n");
+	reset_text_color();
+
+	printf("Lower Memory: %dKB\r\n", mb_ptr->mem_lower);
+	printf("Upper Memory: %dKB\r\n", mb_ptr->mem_upper);
+
+	int total_mem_mb = mb_ptr->mem_upper / 1024;
+	printf("Total Memory: %dMB\r\n", total_mem_mb);
 
 	return 0;
 }

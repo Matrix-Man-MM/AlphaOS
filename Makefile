@@ -21,7 +21,7 @@ OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE) $(GDTFILE) $(IDTFILE) $(ISRSFILE) $(I
 OSFILE = bin/AlphaOS
 
 VM = qemu-system-x86_64
-VMFLAGS = -kernel $(OSFILE)
+VMFLAGS = -kernel $(OSFILE) -m 512M
 
 all: build run
 

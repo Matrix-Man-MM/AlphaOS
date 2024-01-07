@@ -27,6 +27,8 @@ _boot:
 	dd _start
 
 _stublet:
+	push ebx
+	cli
 	extern kernel_main
 	call kernel_main
 	jmp $

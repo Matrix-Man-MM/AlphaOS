@@ -1,4 +1,4 @@
-OUTPUT_FORMAT("binary")
+OUTPUT_FORMAT(elf32-i386)
 ENTRY(_start)
 phys = 0x00100000;
 SECTIONS
@@ -26,4 +26,11 @@ SECTIONS
 	}
 
 	end = .;
+
+	/DISCARD/ :
+	{
+		*(.comment)
+		*(.eh_frame)
+		*(.note.gnu.build-id)
+	}
 }

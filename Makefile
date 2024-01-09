@@ -1,5 +1,5 @@
 CC = gcc
-CCFLAGS = -Wall -m32 -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -fno-PIC
+CCFLAGS = -Wall -m32 -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -fno-PIC -fno-stack-protector
 
 AS = nasm
 ASFLAGS = -f elf
@@ -17,7 +17,9 @@ IRQFILE = bin/irq.o
 TIMERFILE = bin/timer.o
 KEYBOARDFILE = bin/keyboard.o
 PRINTFFILE = bin/printf.o
-OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE) $(GDTFILE) $(IDTFILE) $(ISRSFILE) $(IRQFILE) $(TIMERFILE) $(KEYBOARDFILE) $(PRINTFFILE)
+MEMORYFILE = bin/memory.o
+PANICFILE = bin/panic.o
+OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE) $(GDTFILE) $(IDTFILE) $(ISRSFILE) $(IRQFILE) $(TIMERFILE) $(KEYBOARDFILE) $(PRINTFFILE) $(MEMORYFILE) $(PANICFILE)
 OSFILE = bin/AlphaOS
 
 VM = qemu-system-x86_64
@@ -37,6 +39,8 @@ build:
 	$(CC) $(CCFLAGS) -c src/timer.c -o $(TIMERFILE)
 	$(CC) $(CCFLAGS) -c src/keyboard.c -o $(KEYBOARDFILE)
 	$(CC) $(CCFLAGS) -c src/printf.c -o $(PRINTFFILE)
+	$(CC) $(CCFLAGS) -c src/memory.c -o $(MEMORYFILE)
+	$(CC) $(CCFLAGS) -c src/panic.c -o $(PANICFILE)
 	$(LD) $(LDFLAGS) -o $(OSFILE) $(OBJ)
 
 run:

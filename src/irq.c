@@ -67,6 +67,7 @@ void init_irq()
 	idt_set_gate(45, (unsigned)irq_13, 0x08, 0x8E);
 	idt_set_gate(46, (unsigned)irq_14, 0x08, 0x8E);
 	idt_set_gate(47, (unsigned)irq_15, 0x08, 0x8E);
+	asm volatile("sti");
 }
 
 void handle_irq(struct regs_t* r)

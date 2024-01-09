@@ -50,7 +50,9 @@ void handle_keyboard(struct regs_t* r)
 
 	}
 	else
+	{
 		putc(us_keyboard[scan_code]);
+	}
 }
 
 void init_keyboard()

@@ -6,7 +6,7 @@ void phase(int hz)
 
 	outb(0x43, 0x36);
 	outb(0x40, div & 0xFF);
-	outb(0x40, div >> 8);
+	outb(0x40, (div >> 8) & 0xFF);
 }
 
 int ticks = 0;
@@ -25,6 +25,7 @@ void handle_timer(struct regs_t* r)
 void init_timer()
 {
 	install_irq_handler(0, handle_timer);
+	phase(100);
 }
 
 void wait(int wait_ticks)

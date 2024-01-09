@@ -59,7 +59,7 @@ int kernel_main(struct multiboot_t* mb_ptr) {
 	init_idt();
 	init_isrs();
 	init_irq();
-	asm volatile("sti");
+	init_paging(mb_ptr->mem_upper);
 	init_timer();
 	init_keyboard();
 
@@ -114,6 +114,8 @@ int kernel_main(struct multiboot_t* mb_ptr) {
 
 	int total_mem_mb = mb_ptr->mem_upper / 1024;
 	printf("Total Memory: %dMB\r\n", total_mem_mb);
+
+	printf("Kernel Booted!\r\n");
 
 	return 0;
 }

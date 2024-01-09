@@ -33,6 +33,18 @@ extern void isr_29();
 extern void isr_30();
 extern void isr_31();
 
+static irq_handler_t isrs_routines[32] = { NULL };
+
+void install_isrs_handler(int isrs, irq_handler_t handler)
+{
+	isrs_routines[isrs] = handler;
+}
+
+void uninstall_isrs_handler(int isrs)
+{
+	isrs_routines[isrs] = 0;
+}
+
 void init_isrs()
 {
 	idt_set_gate(0, (unsigned)isr_0, 0x08, 0x8E);
@@ -109,8 +121,16 @@ void handle_fault(struct regs_t* r)
 {
 	if (r->int_no < 32)
 	{
-		puts((char*)except_msgs[r->int_no]);
-		puts(" EXCEPTION! System Halted...\r\n");
-		for (;;);
+		void (*handler)(struct regs_t* r);
+		handler = isrs_routines[r->int_no];
+
+		if (handler)
+			handler(r);
+		else
+		{
+			printf("%s EXCEPTION ENCOUNTERED!\r\n", except_msgs[r->int_no]);
+			puts((char*)except_msgs[r->int_no]);
+			KERNEL_HALT("System Halted!");
+		}
 	}
 }

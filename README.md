@@ -17,3 +17,4 @@ I want to have a large project that I can work on when I'm bored.
 [x] KEYBOARD
 [x] PRINTF
 [x] MULTIBOOT
+[x] PAGING

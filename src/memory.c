@@ -1,5 +1,18 @@
 #include "sys.h"
 
+typedef struct
+{
+	uint32_t magic;
+	char is_hole;
+	uint32_t size;
+} header_t;
+
+typedef struct
+{
+	uint32_t magic;
+	header_t* header;
+} footer_t;
+
 extern uintptr_t end;
 uintptr_t placement_ptr = (uintptr_t)&end;
 
@@ -119,7 +132,7 @@ void free_frame(page_t* page)
 
 void init_paging(uint32_t memsize)
 {
-	nframes = 0x1000;
+	nframes = memsize / 4;
 	frames = (uint32_t*)malloc(INDEX_FROM_BIT(nframes));
 	memset((unsigned char*)frames, 0, INDEX_FROM_BIT(nframes));
 	kernel_dir = (page_dir_t*)vmalloc(sizeof(page_dir_t));

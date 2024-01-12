@@ -12,9 +12,9 @@ void scroll()
 
 	if (cursor_y >= 25)
 	{
-		tmp = cursor_y - 25 + 1;
+		tmp = (cursor_y - 25) + 1;
 		
-		memcpy((unsigned char*)textmemptr, (const unsigned char*)textmemptr + tmp * 80, (25 - tmp) * 80 * 2);
+		memcpy(textmemptr, textmemptr + tmp * 80, (25 - tmp) * 80 * 2);
 		memsetw(textmemptr + (25 - tmp) * 80, blank, 80);
 
 		cursor_y = 25 - 1;
@@ -104,5 +104,7 @@ void reset_text_color()
 void init_vga()
 {
 	textmemptr = (unsigned short*)0xB8000;
-	clear();
+
+	cursor_y = 10;
+	move_cursor();
 }

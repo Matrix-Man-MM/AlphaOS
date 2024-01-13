@@ -13,8 +13,8 @@ void scroll()
 	if (cursor_y >= 25)
 	{
 		tmp = (cursor_y - 25) + 1;
-		
-		memcpy(textmemptr, textmemptr + tmp * 80, (25 - tmp) * 80 * 2);
+
+		memcpy((unsigned char*)textmemptr, (unsigned char*)textmemptr + tmp * 80, (25 - tmp) * 80 * 2);
 		memsetw(textmemptr + (25 - tmp) * 80, blank, 80);
 
 		cursor_y = 25 - 1;

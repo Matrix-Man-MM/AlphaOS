@@ -38,7 +38,7 @@ void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned cha
 void init_gdt()
 {
 	gdtptr.limit = (sizeof(struct gdt_entry) * 3) - 1;
-	gdtptr.base = &gdt;
+	gdtptr.base = (unsigned int)&gdt;
 
 	gdt_set_gate(0, 0, 0, 0, 0);
 	gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);

@@ -56,7 +56,7 @@ void outb(unsigned short port, unsigned char data)
 struct multiboot_t* mb_copy(struct multiboot_t* mb_ptr)
 {
 	struct multiboot_t* new_header = (struct multiboot_t*)malloc(sizeof(struct multiboot_t));
-	memcpy(new_header, mb_ptr, sizeof(struct multiboot_t));
+	memcpy((unsigned char*)new_header, (unsigned char*)mb_ptr, sizeof(struct multiboot_t));
 	return new_header;
 }
 

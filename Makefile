@@ -8,18 +8,9 @@ LD = ld
 LDFLAGS = -m elf_i386 -T link.ld
 
 BOOTFILE = bin/boot.o
-KERNELFILE = bin/kernel.o
-VGAFILE = bin/vga.o
-GDTFILE = bin/gdt.o
-IDTFILE = bin/idt.o
-ISRSFILE = bin/isrs.o
-IRQFILE = bin/irq.o
-TIMERFILE = bin/timer.o
-KEYBOARDFILE = bin/keyboard.o
-PRINTFFILE = bin/printf.o
-MEMORYFILE = bin/memory.o
-PANICFILE = bin/panic.o
-OBJ = $(BOOTFILE) $(KERNELFILE) $(VGAFILE) $(GDTFILE) $(IDTFILE) $(ISRSFILE) $(IRQFILE) $(TIMERFILE) $(KEYBOARDFILE) $(PRINTFFILE) $(MEMORYFILE) $(PANICFILE)
+CFILES = $(wildcard src/*.c)
+ASMFILES = $(wildcard src/*.asm)
+OBJS = $(patsubst src/%.asm,bin/%.o,$(ASMFILES)) $(patsubst src/%.c,bin/%.o,$(CFILES))
 OSFILE = bin/AlphaOS
 
 VM = qemu-system-x86_64
@@ -27,24 +18,20 @@ VMFLAGS = -kernel $(OSFILE) -m 2048M
 
 all: build run
 
-build:
-	mkdir -p bin
-	$(AS) $(ASFLAGS) src/boot.asm -o $(BOOTFILE)
-	$(CC) $(CCFLAGS) -c src/kernel.c -o $(KERNELFILE)
-	$(CC) $(CCFLAGS) -c src/vga.c -o $(VGAFILE)
-	$(CC) $(CCFLAGS) -c src/gdt.c -o $(GDTFILE)
-	$(CC) $(CCFLAGS) -c src/idt.c -o $(IDTFILE)
-	$(CC) $(CCFLAGS) -c src/isrs.c -o $(ISRSFILE)
-	$(CC) $(CCFLAGS) -c src/irq.c -o $(IRQFILE)
-	$(CC) $(CCFLAGS) -c src/timer.c -o $(TIMERFILE)
-	$(CC) $(CCFLAGS) -c src/keyboard.c -o $(KEYBOARDFILE)
-	$(CC) $(CCFLAGS) -c src/printf.c -o $(PRINTFFILE)
-	$(CC) $(CCFLAGS) -c src/memory.c -o $(MEMORYFILE)
-	$(CC) $(CCFLAGS) -c src/panic.c -o $(PANICFILE)
-	$(LD) $(LDFLAGS) -o $(OSFILE) $(OBJ)
+build: dir $(OBJS)
+	$(LD) $(LDFLAGS) -o $(OSFILE) $(OBJS)
+
+bin/%.o: src/%.c
+	$(CC) $(CCFLAGS) -c $< -o $@
+
+bin/%.o: src/%.asm
+	$(AS) $(ASFLAGS) $< -o $@
 
 run:
 	$(VM) $(VMFLAGS)
+
+dir:
+	mkdir -p bin
 
 clean:
 	rm -rf bin

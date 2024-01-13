@@ -134,9 +134,9 @@ void init_paging(uint32_t memsize)
 {
 	nframes = memsize / 4;
 	frames = (uint32_t*)malloc(INDEX_FROM_BIT(nframes));
-	memset(frames, 0, INDEX_FROM_BIT(nframes));
+	memset((unsigned char*)frames, 0, INDEX_FROM_BIT(nframes));
 	kernel_dir = (page_dir_t*)vmalloc(sizeof(page_dir_t));
-	memset(kernel_dir, 0, sizeof(page_dir_t));
+	memset((unsigned char*)kernel_dir, 0, sizeof(page_dir_t));
 	current_dir = kernel_dir;
 
 	uint32_t i = 0;
@@ -171,7 +171,7 @@ page_t* get_page(uintptr_t addr, int make, page_dir_t* dir)
 	{
 		uint32_t tmp;
 		dir->tables[table_index] = (page_table_t*)vmalloc_p(sizeof(page_table_t), (uintptr_t*)(&tmp));
-		memset(dir->tables[table_index], 0, 0x1000);
+		memset((unsigned char*)dir->tables[table_index], 0, 0x1000);
 		dir->physical_tables[table_index] = tmp | 0x7;
 		return &dir->tables[table_index]->pages[addr % 1024];
 	}

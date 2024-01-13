@@ -32,8 +32,8 @@ void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, uns
 void init_idt()
 {
 	idtptr.limit = (sizeof(struct idt_entry) * 256) - 1;
-	idtptr.base = (unsigned int)&idt;
-	memset((unsigned char*)&idt, 0, sizeof(struct idt_entry) * 256);
+	idtptr.base = &idt;
+	memset(&idt, 0, sizeof(struct idt_entry) * 256);
 
 	load_idt();
 }

@@ -56,7 +56,7 @@ void outb(unsigned short port, unsigned char data)
 struct multiboot_t* mb_copy(struct multiboot_t* mb_ptr)
 {
 	struct multiboot_t* new_header = (struct multiboot_t*)malloc(sizeof(struct multiboot_t));
-	memcpy((unsigned char*)new_header, (const unsigned char*)mb_ptr, sizeof(struct multiboot_t));
+	memcpy(new_header, mb_ptr, sizeof(struct multiboot_t));
 	return new_header;
 }
 
@@ -94,8 +94,8 @@ void mb_dump(struct multiboot_t* mb_ptr)
 	set_text_color(2,0);
 	printf("--------------------------------\r\nEND MULTIBOOT RAW DATA\r\n");
 	set_text_color(3,0);
-	printf("Started with %s\r\n", (char*)mb_ptr->cmdline);
-	printf("Booted from %s\r\n", (char*)mb_ptr->boot_loader_name);
+	printf("Started with %s\r\n", mb_ptr->cmdline);
+	printf("Booted from %s\r\n", mb_ptr->boot_loader_name);
 
 	puts("\r\n");
 	reset_text_color();

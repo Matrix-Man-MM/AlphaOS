@@ -109,15 +109,21 @@ void mb_dump(struct multiboot_t* mb_ptr)
 
 int kernel_main(struct multiboot_t* mb_ptr) {
 	mb_ptr = mb_copy(mb_ptr);
-	init_vga();
+
+	// BOOT (Stage 1)
 	init_gdt();
 	init_idt();
 	init_isrs();
 	init_irq();
+	init_vga();
+
 	set_text_color(15,0);
 	printf("[%s %s]\r\n", KERNEL_NAME, KERNEL_VERSION);
 	init_paging(mb_ptr->mem_upper + 1024);
 	mb_dump(mb_ptr);
+	reset_text_color();
+
+	// BOOT (Stage 2)
 	init_timer();
 	init_keyboard();
 

@@ -1,5 +1,5 @@
 CC = gcc
-CCFLAGS = -Werror -m32 -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -fno-PIC -fno-stack-protector -Wno-error=incompatible-pointer-types
+CCFLAGS = -Wall -Wextra -m32 -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -fno-PIC -fno-stack-protector
 
 AS = nasm
 ASFLAGS = -f elf

@@ -11,6 +11,12 @@ typedef unsigned int uint32_t;
 #define KERNEL_NAME "AlphaOS"
 #define KERNEL_VERSION "0.0.0"
 
+#define CHAR_BIT 8
+#define INT32_MAX 0x7FFFFFFFL
+#define UINT32_MAX 0xFFFFFFFFL
+
+extern void* sbrk(uintptr_t increment);
+
 /* KERNEL */
 extern unsigned char* memcpy(unsigned char* dst, const unsigned char* src, int cnt);
 extern unsigned char* memset(unsigned char* dst, unsigned char val, int cnt);
@@ -22,6 +28,7 @@ extern void outb(unsigned short port, unsigned char data);
 /* KERNEL PANIC */
 #define KERNEL_HALT(msg) kernel_halt(msg, __FILE__, __LINE__)
 #define KERNEL_ASSERT(statement) ((statement) ? (void)0 : kernel_assert_failed(__FILE__, __LINE__, #statement))
+#define kernel_assert(statement) ((statement) ? (void)0 : kernel_assert_failed(__FILE__, __LINE__, #statement))
 void kernel_halt(char* error_msg, const char* file, int line);
 void kernel_assert_failed(const char* file, uint32_t line, const char* desc);
 
@@ -113,5 +120,12 @@ extern void init_paging(uint32_t memsize);
 extern void switch_page_dir(page_dir_t* new_page_dir);
 extern page_t* get_page(uintptr_t addr, int make, page_dir_t* dir);
 extern void page_fault(struct regs_t* r);
+
+void* init_heap();
+
+/* KLMALLOC */
+void* __attribute__ ((malloc)) amalloc(size_t size);
+void* __attribute__ ((malloc)) arealloc(void* ptr, size_t size);
+void* __attribute__ ((malloc)) acalloc(size_t nmemb, size_t size);
 
 #endif /* SYS_H */

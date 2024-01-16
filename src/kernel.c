@@ -129,5 +129,40 @@ int kernel_main(struct multiboot_t* mb_ptr) {
 
 	printf("Kernel Booted!\r\n");
 
+	init_heap();
+
+	printf("Asking for %d\n", sizeof(int) * 50);
+	int* ints = amalloc(sizeof(int) * 50);
+	printf("LOL\n");
+	int j;
+	for (j = 0; j < 50; ++j)
+		ints[j] = 50;
+
+	printf("ints[23]: %d\n", ints[23]);
+	char* chars = amalloc(sizeof(char) * 4);
+	for (j = 0; j < 4; ++j)
+		chars[j] = 'a';
+
+	printf("chars[2]: %c\n", chars[2]);
+	free(chars);
+	free(ints);
+	char* a_str = amalloc(sizeof(char) * 6);
+	a_str[0] = 'H';
+	a_str[1] = 'e';
+	a_str[2] = 'l';
+	a_str[3] = 'l';
+	a_str[4] = 'o';
+	a_str[5] = '\0';
+	printf("a_str: %s\n", a_str);
+	free(a_str);
+	printf("freed a_str\n");
+	a_str = amalloc(sizeof(char) * 6);
+	a_str[0] = '1';
+	a_str[1] = '2';
+	a_str[2] = '3';
+	a_str[3] = '\0';
+	printf("a_str: %s\n", a_str);
+	free(a_str);
+
 	return 0;
 }

@@ -24,7 +24,6 @@ uintptr_t malloc_real(size_t size, int align, uintptr_t* phys)
 	if (align && (placement_ptr & 0xFFFFF000))
 	{
 		placement_ptr &= 0xFFFFF000;
-		placement_ptr += 0x1000;
 	}
 
 	if (phys)
@@ -53,6 +52,29 @@ uintptr_t malloc_p(size_t size, uintptr_t* phys)
 uintptr_t vmalloc_p(size_t size, uintptr_t* phys)
 {
 	return malloc_real(size, 1, phys);
+}
+
+uintptr_t heap_end = NULL;
+
+void* init_heap()
+{
+	heap_end = placement_ptr;
+}
+
+void* sbrk(uintptr_t increment)
+{
+	KERNEL_ASSERT(increment % 0x1000 == 0);
+	uintptr_t address = heap_end;
+	heap_end += increment;
+	int i;
+
+	for (i = address; i < heap_end; i += 0x1000)
+	{
+		get_page(i, 1, kernel_dir);
+		alloc_frame(get_page(i, 1, kernel_dir), 0, 0);
+	}
+
+	return address;
 }
 
 uint32_t* frames;

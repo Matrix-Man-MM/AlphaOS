@@ -6,6 +6,7 @@
 typedef unsigned long uintptr_t;
 typedef long size_t;
 typedef unsigned int uint32_t;
+typedef unsigned char uint8_t;
 
 /* Kernel Strings */
 #define KERNEL_NAME "AlphaOS"
@@ -121,7 +122,7 @@ extern void switch_page_dir(page_dir_t* new_page_dir);
 extern page_t* get_page(uintptr_t addr, int make, page_dir_t* dir);
 extern void page_fault(struct regs_t* r);
 
-void* init_heap();
+void init_heap();
 
 /* KLMALLOC */
 void* __attribute__ ((malloc)) amalloc(size_t size);

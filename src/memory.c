@@ -19,6 +19,11 @@ uintptr_t placement_ptr = (uintptr_t)&end;
 page_dir_t* kernel_dir;
 page_dir_t* current_dir;
 
+void malloc_startat(uintptr_t address)
+{
+	placement_ptr = address;
+}
+
 uintptr_t malloc_real(size_t size, int align, uintptr_t* phys)
 {
 	if (align && (placement_ptr & 0xFFFFF000))
@@ -56,7 +61,7 @@ uintptr_t vmalloc_p(size_t size, uintptr_t* phys)
 
 uintptr_t heap_end = NULL;
 
-void* init_heap()
+void init_heap()
 {
 	heap_end = placement_ptr;
 }

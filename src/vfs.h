@@ -9,18 +9,14 @@
 #define VFS_SYMLINK 0x06
 #define VFS_MOUNTPOINT 0x08
 
+struct vfs_node;
+
 typedef uint32_t (*read_type_t)(struct vfs_node*, uint32_t, uint32_t, uint8_t*);
 typedef uint32_t (*write_type_t)(struct vfs_node*, uint32_t, uint32_t, uint8_t*);
 typedef void (*open_type_t)(struct vfs_node*, uint8_t read, uint8_t write);
 typedef void (*close_type_t)(struct vfs_node*);
 typedef struct dirent* (*readdir_type_t)(struct vfs_node*, uint32_t);
 typedef struct vfs_node* (*finddir_type_t)(struct vfs_node*, char* name);
-
-struct dirent
-{
-	char name[256];
-	uint32_t ino;
-};
 
 typedef struct vfs_node
 {
@@ -40,6 +36,12 @@ typedef struct vfs_node
 	finddir_type_t finddir;
 	struct fs_node* ptr;
 } vfs_node_t;
+
+struct dirent
+{
+	char name[256];
+	uint32_t ino;
+};
 
 extern vfs_node_t* vfs_root;
 

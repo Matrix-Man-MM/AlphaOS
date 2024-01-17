@@ -85,6 +85,7 @@ extern void printf(const char* format, ...);
 
 /* MEMORY */
 extern uintptr_t placement_ptr;
+extern void malloc_startat(uintptr_t address);
 extern uintptr_t malloc_real(size_t size, int align, uintptr_t* phys);
 extern uintptr_t malloc(size_t size);
 extern uintptr_t vmalloc(size_t size);

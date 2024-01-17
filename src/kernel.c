@@ -105,9 +105,28 @@ void mb_dump(struct multiboot_t* mb_ptr)
 
 	int total_mem_mb = mb_ptr->mem_upper / 1024;
 	printf("Total Memory: %dMB\r\n", total_mem_mb);
+
+	printf("Found %d Modules!\r\n", mb_ptr->mods_count);
+	if (mb_ptr->mods_count > 0)
+	{
+		int i;
+		for (i = 0; i < mb_ptr->mods_count; ++i)
+		{
+			uint32_t mod_start = *((uint32_t*)mb_ptr->mods_addr + 8 * i);
+			uint32_t mod_end = *(uint32_t*)(mb_ptr->mods_addr + 8 * i + 4);
+			printf("Module %d is at 0x%x:0x%x\r\n", i+1, mod_start, mod_end);
+		}
+	}
 }
 
 int kernel_main(struct multiboot_t* mb_ptr) {
+	if (mb_ptr->mods_count > 0)
+	{
+		uint32_t mod_start = *((uint32_t*)mb_ptr->mods_addr);
+		uint32_t mod_end = *(uint32_t*)(mb_ptr->mods_addr+4);
+		malloc_startat(mod_end);
+	}
+
 	mb_ptr = mb_copy(mb_ptr);
 
 	// BOOT (Stage 1)

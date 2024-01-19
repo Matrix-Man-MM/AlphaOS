@@ -14,7 +14,7 @@ OBJS = $(patsubst src/%.asm,bin/%.o,$(ASMFILES)) $(patsubst src/%.c,bin/%.o,$(CF
 OSFILE = bin/AlphaOS
 
 VM = qemu-system-x86_64
-VMFLAGS = -cpu qemu64 -kernel $(OSFILE) -m 2048M -drive format=raw,file=drive/drive.hdd,if=ide,index=0
+VMFLAGS = -cpu qemu64 -kernel $(OSFILE) -m 2048M -initrd drive/initrd -drive format=raw,file=drive/drive.hdd,if=ide,index=0
 
 all: build run
 

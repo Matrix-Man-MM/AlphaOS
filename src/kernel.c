@@ -1,5 +1,6 @@
 #include "sys.h"
 #include "multiboot.h"
+#include "ext2.h"
 
 unsigned char* memcpy(unsigned char* dst, const unsigned char* src, int cnt)
 {
@@ -120,10 +121,13 @@ void mb_dump(struct multiboot_t* mb_ptr)
 }
 
 int kernel_main(struct multiboot_t* mb_ptr) {
+	uint32_t mod_start;
+	uint32_t mod_end;
+
 	if (mb_ptr->mods_count > 0)
 	{
-		uint32_t mod_start = *((uint32_t*)mb_ptr->mods_addr);
-		uint32_t mod_end = *(uint32_t*)(mb_ptr->mods_addr+4);
+		mod_start = *((uint32_t*)mb_ptr->mods_addr);
+		mod_end = *(uint32_t*)(mb_ptr->mods_addr+4);
 		malloc_startat(mod_end);
 	}
 
@@ -182,6 +186,86 @@ int kernel_main(struct multiboot_t* mb_ptr) {
 	a_str[3] = '\0';
 	printf("a_str: %s\n", a_str);
 	free(a_str);
+
+	ext2_superblock_t* superblock = (ext2_superblock_t*)(mod_start + 1024);
+	printf("Magic: 0x%x\r\n", (int)superblock->magic);
+	kernel_assert(superblock->magic == EXT2_SUPER_MAGIC);
+
+	printf("Partition\r\n----------------------");
+	printf("Inodes: %d\tBlocks: %d\r\n", superblock->inodes_count, superblock->blocks_count);
+	printf("Blocks Reserved For Root: %d\r\n", superblock->r_blocks_count);
+	printf("Blocks Free: %d\r\n", superblock->free_blocks_count);
+	printf("Free Inodes: %d\r\n", superblock->free_inodes_count);
+	printf("Blocks contain %d bytes!\r\n", 1024 << superblock->log_block_size);
+	printf("Fragments contain %d bytes!\r\n", 1024 << superblock->log_frag_size);
+	printf("Block ID: %d\r\n", superblock->first_data_block);
+	printf("Blocks In Group: %d\r\n", superblock->blocks_per_group);
+	printf("Fragments In Group: %d\r\n", superblock->frags_per_group);
+	printf("Inodes In Group: %d\r\n", superblock->inodes_per_group);
+	printf("Last Mount: 0x%x\r\n", superblock->mtime);
+	printf("Last Write: 0x%x\r\n", superblock->wtime);
+	printf("Mounts Since Verification: %d\r\n", superblock->mnt_count);
+	printf("Must Be Verified In %d Mounts!\r\n", superblock->max_mnt_count - superblock->mnt_count);
+	printf("Inodes Are %d Bytes!\r\n", (int)superblock->inode_size);
+
+	ext2_bgdescriptor_t* blockgroups = (ext2_bgdescriptor_t*)(mod_start + 1024 + 1024);
+	printf("FIRST BLOCK GROUP\r\n---------------------------\r\n");
+	printf("Free Blocks: %d\r\n", blockgroups->free_blocks_count);
+	printf("Free Inodes: %d\r\n", blockgroups->free_inodes_count);
+	printf("Used Dirs: %d\r\n", blockgroups->free_inodes_count);
+
+	ext2_inodetable_t* inodetable = (ext2_inodetable_t*)(mod_start + (1024 << superblock->log_block_size) * blockgroups->inode_table);
+	uint32_t i;
+	for (i = 0; i < superblock->inodes_per_group; ++i)
+	{
+		ext2_inodetable_t* inode = (ext2_inodetable_t*)((int)inodetable + (int)superblock->inode_size * i);
+		if (inode->block[0] == 0)
+			continue;
+
+		printf("INODE %d\r\n----------------------------------\r\n", i);
+		printf("Starting Block: %d,%d\r\n", inode->block[0], inode->block[1]);
+		printf("Bytes: %d\r\n", inode->size);
+		printf("Blocks: %d\r\n", inode->blocks);
+
+		if (inode->mode & EXT2_S_IFDIR)
+		{
+			printf("Is a directory!\r\n");
+			printf("File Listing:\r\n");
+			uint32_t dir_offset;
+			dir_offset = 0;
+
+			while (dir_offset < inode->size)
+			{
+				ext2_dir_t* d_ent = (ext2_dir_t*)(mod_start + (1024 << superblock->log_block_size) * inode->block[0] + dir_offset);
+				unsigned char* name = amalloc(sizeof(unsigned char) * (d_ent->name_len + 1));
+				memcpy(name, &d_ent->name, d_ent->name_len);
+				name[d_ent->name_len] = '\0';
+				printf("[%d] %s [%d]\r\n", dir_offset, name, d_ent->inode);
+
+				if (name[0] == 'h' && name[1] == 'e' && name[2] == 'l' && name[3] == 'l' && name[4] == 'o')
+				{
+					printf("File Found!\r\n");
+					ext2_inodetable_t* inode_f = (ext2_inodetable_t*)((int)inodetable + (int)superblock->inode_size * (d_ent->inode - 1));
+					printf("Going to print %d bytes from block %d...\r\n", inode_f->size, inode_f->block[0]);
+					unsigned char* file_ptr = (unsigned char*)(mod_start + (1024 << superblock->log_block_size) * inode_f->block[0]);
+
+					unsigned int file_offset;
+					for(file_offset = 0; file_offset < inode_f->size; ++file_offset)
+						printf("%c", file_ptr[file_offset]);
+				}
+
+				free(name);
+				dir_offset += d_ent->rec_len;
+				if (d_ent->inode == 0)
+					break;
+			}
+
+			break;
+		}
+
+		printf("\r\n");
+	}
+
 
 	return 0;
 }

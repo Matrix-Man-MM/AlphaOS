@@ -5,4 +5,4 @@ build:
 	./drive
 
 clean:
-	rm drive drive.hdd
+	rm drive drive.hdd initrd

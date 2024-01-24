@@ -46,3 +46,8 @@ vfs_node_t* finddir_vfs(vfs_node_t* node, char* name)
 	else
 		return (vfs_node_t*)NULL;
 }
+
+vfs_node_t* aopen(const char* filename, uint32_t flags)
+{
+
+}

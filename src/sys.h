@@ -6,6 +6,8 @@
 typedef unsigned long uintptr_t;
 typedef long size_t;
 typedef unsigned int uint32_t;
+typedef unsigned short uint16_t;
+typedef unsigned long long uint64_t;
 typedef unsigned char uint8_t;
 
 /* Kernel Strings */
@@ -25,6 +27,7 @@ extern unsigned short* memsetw(unsigned short* dst, unsigned short val, int cnt)
 extern int strlen(const char* str);
 extern unsigned char inb(unsigned short port);
 extern void outb(unsigned short port, unsigned char data);
+int strcmp(const char* str1, const char* str2);
 
 /* KERNEL PANIC */
 #define KERNEL_HALT(msg) kernel_halt(msg, __FILE__, __LINE__)
@@ -129,5 +132,6 @@ void init_heap();
 void* __attribute__ ((malloc)) amalloc(size_t size);
 void* __attribute__ ((malloc)) arealloc(void* ptr, size_t size);
 void* __attribute__ ((malloc)) acalloc(size_t nmemb, size_t size);
+void free(void* ptr);
 
 #endif /* SYS_H */

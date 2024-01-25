@@ -6,13 +6,8 @@
 
 #include "sys.h"
 
-#if SIZE_MAX == UINT32_MAX
 #define NUM_BINS 11U
 #define SMALLEST_BIN_LOG 2U
-#else
-#define NUM_BINS 10U
-#define SMALLEST_BIN_LOG 3U
-#endif
 
 #define BIG_BIN (NUM_BINS - 1)
 #define SMALLEST_BIN (1UL << SMALLEST_BIN_LOG)

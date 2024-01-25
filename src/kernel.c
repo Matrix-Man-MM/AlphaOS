@@ -54,6 +54,25 @@ void outb(unsigned short port, unsigned char data)
 	asm volatile("outb %1, %0" :: "dN"(port), "a"(data));
 }
 
+int strcmp(const char* str1, const char* str2)
+{
+	uint32_t i = 0;
+	while (1)
+	{
+		if (str1[i] < str2[i])
+			return -1;
+		else if (str1[i] > str2[i])
+			return 1;
+		else
+		{
+			if (str1[i] == '\0')
+				return 0;
+
+			++i;
+		}
+	}
+}
+
 struct multiboot_t* mb_copy(struct multiboot_t* mb_ptr)
 {
 	struct multiboot_t* new_header = (struct multiboot_t*)malloc(sizeof(struct multiboot_t));
@@ -154,66 +173,19 @@ int kernel_main(struct multiboot_t* mb_ptr) {
 
 	init_heap();
 
-	printf("Asking for %d\n", sizeof(int) * 50);
-	int* ints = amalloc(sizeof(int) * 50);
-	printf("LOL\n");
-	int j;
-	for (j = 0; j < 50; ++j)
-		ints[j] = 50;
+	initrd_mount(mod_start, mod_end);
+	vfs_node_t* hello_txt = aopen("/hello.txt", NULL);
 
-	printf("ints[23]: %d\n", ints[23]);
-	char* chars = amalloc(sizeof(char) * 4);
-	for (j = 0; j < 4; ++j)
-		chars[j] = 'a';
+	if (!hello_txt)
+		printf("Could not find /hello.txt\r\n");
 
-	printf("chars[2]: %c\n", chars[2]);
-	free(chars);
-	free(ints);
-	char* a_str = amalloc(sizeof(char) * 6);
-	a_str[0] = 'H';
-	a_str[1] = 'e';
-	a_str[2] = 'l';
-	a_str[3] = 'l';
-	a_str[4] = 'o';
-	a_str[5] = '\0';
-	printf("a_str: %s\n", a_str);
-	free(a_str);
-	printf("freed a_str\n");
-	a_str = amalloc(sizeof(char) * 6);
-	a_str[0] = '1';
-	a_str[1] = '2';
-	a_str[2] = '3';
-	a_str[3] = '\0';
-	printf("a_str: %s\n", a_str);
-	free(a_str);
+	printf("Found %s at inode %d!\r\n", hello_txt->name, hello_txt->inode);
 
+#if 0
 	ext2_superblock_t* superblock = (ext2_superblock_t*)(mod_start + 1024);
-	printf("Magic: 0x%x\r\n", (int)superblock->magic);
 	kernel_assert(superblock->magic == EXT2_SUPER_MAGIC);
-
-	printf("Partition\r\n----------------------");
-	printf("Inodes: %d\tBlocks: %d\r\n", superblock->inodes_count, superblock->blocks_count);
-	printf("Blocks Reserved For Root: %d\r\n", superblock->r_blocks_count);
-	printf("Blocks Free: %d\r\n", superblock->free_blocks_count);
-	printf("Free Inodes: %d\r\n", superblock->free_inodes_count);
-	printf("Blocks contain %d bytes!\r\n", 1024 << superblock->log_block_size);
-	printf("Fragments contain %d bytes!\r\n", 1024 << superblock->log_frag_size);
-	printf("Block ID: %d\r\n", superblock->first_data_block);
-	printf("Blocks In Group: %d\r\n", superblock->blocks_per_group);
-	printf("Fragments In Group: %d\r\n", superblock->frags_per_group);
-	printf("Inodes In Group: %d\r\n", superblock->inodes_per_group);
-	printf("Last Mount: 0x%x\r\n", superblock->mtime);
-	printf("Last Write: 0x%x\r\n", superblock->wtime);
-	printf("Mounts Since Verification: %d\r\n", superblock->mnt_count);
-	printf("Must Be Verified In %d Mounts!\r\n", superblock->max_mnt_count - superblock->mnt_count);
-	printf("Inodes Are %d Bytes!\r\n", (int)superblock->inode_size);
-
+	
 	ext2_bgdescriptor_t* blockgroups = (ext2_bgdescriptor_t*)(mod_start + 1024 + 1024);
-	printf("FIRST BLOCK GROUP\r\n---------------------------\r\n");
-	printf("Free Blocks: %d\r\n", blockgroups->free_blocks_count);
-	printf("Free Inodes: %d\r\n", blockgroups->free_inodes_count);
-	printf("Used Dirs: %d\r\n", blockgroups->free_inodes_count);
-
 	ext2_inodetable_t* inodetable = (ext2_inodetable_t*)(mod_start + (1024 << superblock->log_block_size) * blockgroups->inode_table);
 	uint32_t i;
 	for (i = 0; i < superblock->inodes_per_group; ++i)
@@ -265,7 +237,7 @@ int kernel_main(struct multiboot_t* mb_ptr) {
 
 		printf("\r\n");
 	}
-
+#endif
 
 	return 0;
 }

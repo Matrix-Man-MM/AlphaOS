@@ -158,22 +158,22 @@ uint32_t initrd_node_from_dirent(ext2_inodetable_t* inode, struct dirent* dirent
 	fnode->flags = 0;
 
 	if (inode->mode & EXT2_S_IFREG)
-		fnode->flags &= VFS_FILE;
+		fnode->flags |= VFS_FILE;
 
 	if (inode->mode & EXT2_S_IFDIR)
-		fnode->flags &= VFS_DIRECTORY;
+		fnode->flags |= VFS_DIRECTORY;
 
 	if (inode->mode & EXT2_S_IFBLK)
-		fnode->flags &= VFS_BLOCKDEVICE;
+		fnode->flags |= VFS_BLOCKDEVICE;
 
 	if (inode->mode & EXT2_S_IFCHR)
-		fnode->flags &= VFS_CHARDEVICE;
+		fnode->flags |= VFS_CHARDEVICE;
 
 	if (inode->mode & EXT2_S_IFIFO)
-		fnode->flags &= VFS_PIPE;
+		fnode->flags |= VFS_PIPE;
 
 	if (inode->mode & EXT2_S_IFLNK)
-		fnode->flags &= VFS_SYMLINK;
+		fnode->flags |= VFS_SYMLINK;
 
 	fnode->read = initrd_read;
 	fnode->write = initrd_write;

@@ -146,7 +146,7 @@ int kernel_main(struct multiboot_t* mb_ptr) {
 	if (mb_ptr->mods_count > 0)
 	{
 		mod_start = *((uint32_t*)mb_ptr->mods_addr);
-		mod_end = *(uint32_t*)(mb_ptr->mods_addr+4);
+		mod_end = *(uint32_t*)(mb_ptr->mods_addr + 4);
 		malloc_startat(mod_end);
 	}
 
@@ -174,12 +174,20 @@ int kernel_main(struct multiboot_t* mb_ptr) {
 	init_heap();
 
 	initrd_mount(mod_start, mod_end);
-	vfs_node_t* hello_txt = aopen("/hello.txt", NULL);
+	printf("Opening /usr/docs/hello.txt...\r\n");
+	vfs_node_t* hello_txt = aopen("/usr/docs/hello.txt", NULL);
 
 	if (!hello_txt)
-		printf("Could not find /hello.txt\r\n");
+		printf("Could not find hello.txt\r\n");
 
 	printf("Found %s at inode %d!\r\n", hello_txt->name, hello_txt->inode);
+	char buffer[256];
+	uint32_t bytes_read;
+	bytes_read = read_vfs(hello_txt, 0, 255, &buffer);
+
+	printf("Read %d bytes from file: %s\r\n", bytes_read, buffer);
+	printf("| end file\r\n");
+	close_vfs(hello_txt);
 
 #if 0
 	ext2_superblock_t* superblock = (ext2_superblock_t*)(mod_start + 1024);

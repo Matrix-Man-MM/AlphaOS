@@ -88,7 +88,11 @@ vfs_node_t* aopen(const char* filename, uint32_t flags)
 			return NULL;
 		}
 		else if (depth == path_depth - 1)
+		{
+			open_vfs(node_ptr, 1, 0);
 			return node_ptr;
+		}
+		path_offset += strlen(path_offset) + 1;
 	}
 
 	free((void*)path);

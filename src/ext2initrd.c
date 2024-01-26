@@ -25,7 +25,18 @@ void* ext2_get_block(uint32_t block);
 
 uint32_t initrd_read(vfs_node_t* node, uint32_t offset, uint32_t size, uint8_t* buffer)
 {
-	return 0;
+	ext2_inodetable_t* inode = ext2_get_inode(node->inode);
+	uint32_t end;
+
+	if (offset + size > inode->size)
+		end = inode->size;
+	else
+		end = offset + size;
+
+	uint32_t size_to_read = end - offset;
+
+	memcpy(buffer, ext2_get_block(inode->block[0]) + offset, size_to_read);
+	return size_to_read;
 }
 
 uint32_t initrd_write(vfs_node_t* node, uint32_t offset, uint32_t size, uint8_t* buffer)
@@ -93,7 +104,7 @@ vfs_node_t* initrd_finddir(vfs_node_t* node, char* name)
 			return NULL;
 
 		vfs_node_t* outnode = amalloc(sizeof(vfs_node_t));
-		initrd_node_from_file(direntry->inode, direntry, outnode);
+		initrd_node_from_file(ext2_get_inode(direntry->inode), direntry, outnode);
 		return outnode;
 	}
 }
